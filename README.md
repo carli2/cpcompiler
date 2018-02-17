@@ -37,7 +37,7 @@ There has to be a tradeoff between compile time and runtime. If a function is ex
 Performance also will minimize the power your smartphone will consume in order to display webpage X.
 
 ## Latency
-The motivation behind optimizing latency is that a human's time is much more worth that some cycles spent by the CPU. So then the human user clicks on an item, the code has to be executed as fast as possible even when the compiler spent 100x the original execution time optimizing the time critical code during idle time.
+The motivation behind optimizing latency is that a human's time is much more worth that some cycles spent by the CPU. So when the human user clicks on an item, the code has to be executed as fast as possible even when the compiler spent 100x the original execution time optimizing the time critical code during idle time.
 
 For removing latency, C-P compiler will run nightly compile+optimize jobs on prepared queries in database systems or precompile the onclick function of a button when hovering it.
 
