@@ -118,4 +118,5 @@ Next steps:
 * Start working on the JIT stages
 * Add a module that allows to create executables with integrated runtime environment
 * Start awesome projects like a self-optimizing in-memory database
+* Get integrated into all main browsers
 
