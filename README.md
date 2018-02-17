@@ -58,11 +58,10 @@ Every code tree node is 32 bytes wide and contains 4 64bit values: Pointer to th
 Code tree nodes are immutable with exception of optimizations that do not modify behaviour. The following node types are available:
 * command (firstCommand, secondCommand) executes these two commands in series
 * operator_Add (firstOperand, secondOperand) arbitrary operators
-* dot (object, property) reads property (string or integer) out of object
+* get (object, key) reads property (string or integer) out of object
 * property (key, value) builds a key/value pair of which you can compose objects
 * object (leftSubTree, rightSubTree) builds balanced tree of properties that form a object
 * set (object, property) returns a updated object
-* get (object, key) extracts a property form object
 * emptylist () is the end of a linked list or an empty list (e.g. for call parameters)
 * list (element, tail) is a element of a linked list
 * call (function, parameters) calls the function with these parameters
@@ -76,8 +75,8 @@ Code tree nodes are immutable with exception of optimizations that do not modify
 
 `console.log('Hello World')` translates to the following tree:
 * call
-  * dot
-    * dot
+  * get
+    * get
 	  * scope
       * string "console"
     * string "log"
