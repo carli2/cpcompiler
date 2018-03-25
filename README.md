@@ -137,6 +137,7 @@ To test your own first experiments, take a look at `runtests.js`:
 var numbera = cpcompiler.node(12)
 var numberb = cpcompiler.node(1)
 var numberc = cpcompiler.node('operator_add', numbera, numberb);
+console.log(numberc.exec());
 ```
 
 This way you can build your own code tree from nodes. One TODO is to create a JavaScript compiler written in JavaScript that will build such a tree from a given input JavaScript.
