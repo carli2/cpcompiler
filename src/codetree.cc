@@ -6,6 +6,31 @@ namespace cpcompiler {
 	CodeNode CodeNode::undefined(&CommandDescriptor::undefined);
 	CodeNode CodeNode::null(&CommandDescriptor::null);
 
+	CodeNode *CodeNode::number(double number) {
+		CodeNode *result = allocate(&CommandDescriptor::number);
+		result->param1.number = number;
+		return result;
+	}
+
+	CodeNode *CodeNode::integer(std::size_t integer) {
+		CodeNode *result = allocate(&CommandDescriptor::integer);
+		result->param1.integer = integer;
+		return result;
+	}
+
+	CodeNode *CodeNode::string(const char *string) {
+		CodeNode *result = allocate(&CommandDescriptor::string);
+		result->param1.string = string;
+		return result;
+	}
+
+	CodeNode *CodeNode::native(NativeFunction *function, void *userdata) {
+		CodeNode *result = allocate(&CommandDescriptor::native);
+		result->param1.function = function;
+		result->param2.userdata = userdata;
+		return result;
+	}
+
 	CodeNode *CodeNode::allocate() {
 		// TODO: Garbage Collect in separate thread
 		allMemory[nextPtr].gcInfo = 1; // used

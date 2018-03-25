@@ -12,5 +12,6 @@ namespace cpcompiler {
 	CommandDescriptor CommandDescriptor::undefined("undefined", &data::reflect, 0);
 	CommandDescriptor CommandDescriptor::null("null", &data::reflect, 0);
 	CommandDescriptor CommandDescriptor::number("number", &data::reflect);
-	CommandDescriptor CommandDescriptor::number("integer", &data::reflect);
+	CommandDescriptor CommandDescriptor::integer("integer", &data::reflect);
+	CommandDescriptor CommandDescriptor::string("string", &data::reflect);
 }

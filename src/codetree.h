@@ -7,12 +7,22 @@ namespace cpcompiler {
 
 	const std::size_t MAX_MEMORY = 2 << 24;
 
+	/** for custom functions:
+	 * @param context holds all variables, global object and so on
+	 * @param arguments arguments passed from the caller
+	 * @param userdata passed by function
+	 * @return result as CodeNode
+	 */
+	typedef CodeNode *(*NativeFunction)(CodeNode *context, CodeNode *arguments, void *userdata);
+
 	/* size: 64 bit */
 	union arbitraryValue {
 		CodeNode *node;
 		const char *string;
 		std::size_t integer;
 		double number;
+		NativeFunction *function;
+		void *userdata;
 	};
 
 	/* a node all code and data trees are constructed from */
@@ -27,6 +37,11 @@ namespace cpcompiler {
 			std::size_t gcInfo = 0; // 0 = unused; gc info for garbage collector
 
 			static CodeNode *allocate(); /* get free space in a few cycles thanks to constant node size */
+			static inline CodeNode *allocate(CommandDescriptor *command) {
+				CodeNode *result = allocate();
+				result->command = command;
+				return result;
+			}
 			static inline CodeNode *allocate(CommandDescriptor *command, const arbitraryValue &param1, const arbitraryValue &param2) {
 				CodeNode *result = allocate();
 				result->command = command;
@@ -34,6 +49,12 @@ namespace cpcompiler {
 				result->param2 = param2;
 				return result;
 			}
+
+			/* some default constructors */
+			static inline CodeNode *number(double number);
+			static inline CodeNode *integer(std::size_t integer);
+			static inline CodeNode *string(const char *string);
+			static inline CodeNode *native(NativeFunction *function, void *userdata);
 
 			/* some constants to save allocations */
 			static CodeNode undefined;
@@ -68,9 +89,21 @@ namespace cpcompiler {
 			static CommandDescriptor undefined;
 			static CommandDescriptor null;
 			static CommandDescriptor number;
+			static CommandDescriptor string;
+			static CommandDescriptor integer;
 
 			/* arithmetic */
 			static CommandDescriptor operator_add;
+
+			/* call */
+			static CommandDescriptor call;
+			static CommandDescriptor native;
+			static CommandDescriptor lambda;
+			static CommandDescriptor argument;
+
+			/* list */
+			static CommandDescriptor emptylist;
+			static CommandDescriptor list;
 
 	};
 }

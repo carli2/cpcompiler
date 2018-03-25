@@ -67,7 +67,9 @@ Code tree nodes are immutable with exception of optimizations that do not modify
 * emptylist () is the end of a linked list or an empty list (e.g. for call parameters)
 * list (element, tail) is a element of a linked list
 * call (function, parameters) calls the function with these parameters
+* native (v8::Function)
 * lambda (function, scope) where scope is an object, adds all key/values of scope to the accessible
+* argumenet (index) accessing a function argument
 * string (length, pointer) is a string literal
 * number (value) is a number (=double) literal
 * undefined - a empty value
