@@ -1,6 +1,8 @@
 # C-P Compiler
 C-P Compiler is a runtime engine and meta compiler that allows high performance safe script execution bypassing abstraction and emulation.
 
+![JavaScript Runtime and Compiler](https://cdn.pixabay.com/photo/2014/12/29/17/39/code-583073_960_720.jpg "C-P Compiler aims to be a self-optimizing JavaScript runtime")
+
 # Motivation
 Since computers have been improving speed by orders of magnitude, software is still as slow as in those days, even slower. Compare the reaction time of a Windows 95 GUI in comparison to modern user interfaces, you will find it was way faster back then. But why is it so?
 
