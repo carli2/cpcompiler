@@ -1,7 +1,7 @@
 #include "codetree.h"
 
 namespace cpcompiler {
-	std::map<const char*, CommandDescriptor*> CommandDescriptor::commands;
+	std::map<const std::string, CommandDescriptor*> CommandDescriptor::commands;
 
 	namespace command {
 		CodeNode *operator_add(CodeNode *context, CodeNode *node) {
@@ -19,10 +19,10 @@ namespace cpcompiler {
 		}
 	}
 
-	CommandDescriptor CommandDescriptor::undefined("undefined", &command::reflect);
-	CommandDescriptor CommandDescriptor::null("null", &command::reflect);
+	CommandDescriptor CommandDescriptor::undefined("undefined", &command::reflect, 0);
+	CommandDescriptor CommandDescriptor::null("null", &command::reflect, 0);
 	CommandDescriptor CommandDescriptor::number("number", &command::reflect);
-	CommandDescriptor CommandDescriptor::operator_add("operator_add", &command::operator_add);
+	CommandDescriptor CommandDescriptor::operator_add("operator_add", &command::operator_add, 2);
 
 	CodeNode CodeNode::undefined(&CommandDescriptor::undefined);
 	CodeNode CodeNode::null(&CommandDescriptor::null);

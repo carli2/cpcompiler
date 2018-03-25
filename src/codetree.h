@@ -47,10 +47,12 @@ namespace cpcompiler {
 		public:
 			const char *name;
 			ExecuteFunction executeFunction;
+			int nodeArguments;
 			
-			static std::map<const char*, CommandDescriptor*> commands;
+			static std::map<const std::string, CommandDescriptor*> commands;
 
-			CommandDescriptor(const char *name, ExecuteFunction executeFunction): name(name), executeFunction(executeFunction) { commands[name] = this; }
+			CommandDescriptor(const char *name, ExecuteFunction executeFunction): name(name), executeFunction(executeFunction), nodeArguments(-1) { commands[name] = this; }
+			CommandDescriptor(const char *name, ExecuteFunction executeFunction, int nodeArguments): name(name), executeFunction(executeFunction), nodeArguments(nodeArguments) { commands[name] = this; }
 
 			/* some command descriptors forward */
 			static CommandDescriptor undefined;
