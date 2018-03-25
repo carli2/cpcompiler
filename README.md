@@ -124,3 +124,31 @@ Next steps:
 * Start awesome projects like a self-optimizing in-memory database
 * Get integrated into all main browsers
 
+# Build
+To test the code yourself, type in the following commands:
+```
+$ node-gyp build
+$ node runtests.js
+```
+
+# Testing and TODO
+To test your own first experiments, take a look at `runtests.js`:
+```
+var numbera = cpcompiler.node(12)
+var numberb = cpcompiler.node(1)
+var numberc = cpcompiler.node('operator_add', numbera, numberb);
+```
+
+This way you can build your own code tree from nodes. One TODO is to create a JavaScript compiler written in JavaScript that will build such a tree from a given input JavaScript.
+
+# Bootstrapping other languages with C-P Compiler
+Once there is a JavaScript compiler written in JavaScript, it is possible to implement any other languages simply by building up a code tree inside JavaScript. This means, only the JS compiler has to access C-P compiler library directly. All other compilers can be built as interpreters on top of JavaScript in a functional style like this:
+```
+function compile_operator_add(leftside, rightside) {
+	return function () {
+		return leftside() + rightside();
+	}
+}
+```
+
+C-P Compiler will take the resulting function objects and boil them down to efficient machine code. So keep on rocking!
