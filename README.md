@@ -59,7 +59,7 @@ Every code tree node is 32 bytes wide and contains 4 64bit values: Pointer to th
 
 Code tree nodes are immutable with exception of optimizations that do not modify behaviour. The following node types are available:
 * command (firstCommand, secondCommand) executes these two commands in series
-* operator_Add (firstOperand, secondOperand) arbitrary operators
+* operator_add (firstOperand, secondOperand) arbitrary operators
 * get (object, key) reads property (string or integer) out of object
 * property (key, value) builds a key/value pair of which you can compose objects
 * object (leftSubTree, rightSubTree) builds balanced tree of properties that form a object

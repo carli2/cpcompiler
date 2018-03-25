@@ -7,6 +7,7 @@ namespace cpcompiler {
 
 	const std::size_t MAX_MEMORY = 2 << 24;
 
+	/* size: 64 bit */
 	union arbitraryValue {
 		CodeNode *node;
 		const char *string;
@@ -14,17 +15,18 @@ namespace cpcompiler {
 		double number;
 	};
 
+	/* a node all code and data trees are constructed from */
 	class CodeNode {
 		public:
 			CodeNode() {}
 			CodeNode(CommandDescriptor *command): command(command) {}
 
-			CommandDescriptor *command;
-			arbitraryValue param1;
+			CommandDescriptor *command; /* command */
+			arbitraryValue param1; /* 0-2 child nodes, not more. */
 			arbitraryValue param2;
-			std::size_t gcInfo = 0; // unused
+			std::size_t gcInfo = 0; // 0 = unused; gc info for garbage collector
 
-			static CodeNode *allocate();
+			static CodeNode *allocate(); /* get free space in a few cycles thanks to constant node size */
 			static inline CodeNode *allocate(CommandDescriptor *command, const arbitraryValue &param1, const arbitraryValue &param2) {
 				CodeNode *result = allocate();
 				result->command = command;
@@ -38,20 +40,27 @@ namespace cpcompiler {
 			static CodeNode null;
 
 		private:
-			static CodeNode allMemory[MAX_MEMORY];
+			static CodeNode allMemory[MAX_MEMORY]; /* our heap; hopefully sparsely occupied by OS */
 			static std::size_t nextPtr;
 	};
 
+	/** executing a node:
+	 * @param context holds all variables, global object and so on
+	 * @param node is the node to evaluate
+	 * @return result as CodeNode
+	 */
 	typedef CodeNode *(*ExecuteFunction)(CodeNode *context, CodeNode *node);
 
+	/* describes a node type: with all optimizations */
 	class CommandDescriptor {
 		public:
-			const char *name;
-			ExecuteFunction executeFunction;
-			int nodeArguments;
+			const char *name; /* name of the node type */
+			ExecuteFunction executeFunction; /* how to execute/optimze */
+			int nodeArguments; /* how many node arguments are allowed: -1 = special (e.g. integer, number, string), 0 = leaf (null, undefined), 1 = unary, 2 = binary */
 			
-			static std::map<const std::string, CommandDescriptor*> commands;
+			static std::map<const std::string, CommandDescriptor*> commands; /* register of all commands */
 
+			/* declaring new node types */
 			CommandDescriptor(const char *name, ExecuteFunction executeFunction): name(name), executeFunction(executeFunction), nodeArguments(-1) { commands[name] = this; }
 			CommandDescriptor(const char *name, ExecuteFunction executeFunction, int nodeArguments): name(name), executeFunction(executeFunction), nodeArguments(nodeArguments) { commands[name] = this; }
 
@@ -64,6 +73,4 @@ namespace cpcompiler {
 			static CommandDescriptor operator_add;
 
 	};
-
-	void deployCommands();
 }
