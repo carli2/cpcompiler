@@ -33,6 +33,7 @@ namespace cpcompiler {
 				return result;
 			}
 
+			/* some constants to save allocations */
 			static CodeNode undefined;
 			static CodeNode null;
 
@@ -54,10 +55,12 @@ namespace cpcompiler {
 			CommandDescriptor(const char *name, ExecuteFunction executeFunction): name(name), executeFunction(executeFunction), nodeArguments(-1) { commands[name] = this; }
 			CommandDescriptor(const char *name, ExecuteFunction executeFunction, int nodeArguments): name(name), executeFunction(executeFunction), nodeArguments(nodeArguments) { commands[name] = this; }
 
-			/* some command descriptors forward */
+			/* data */
 			static CommandDescriptor undefined;
 			static CommandDescriptor null;
 			static CommandDescriptor number;
+
+			/* arithmetic */
 			static CommandDescriptor operator_add;
 
 	};
