@@ -14,13 +14,18 @@ namespace cpcompiler {
 			// TODO: string add, type conversion, error handling and much more
 			return NULL;
 		}
-		CodeNode *number(CodeNode *context, CodeNode *node) {
+		CodeNode *reflect(CodeNode *context, CodeNode *node) {
 			return node;
 		}
 	}
 
-	CommandDescriptor CommandDescriptor::number("number", &command::number);
+	CommandDescriptor CommandDescriptor::undefined("undefined", &command::reflect);
+	CommandDescriptor CommandDescriptor::null("null", &command::reflect);
+	CommandDescriptor CommandDescriptor::number("number", &command::reflect);
 	CommandDescriptor CommandDescriptor::operator_add("operator_add", &command::operator_add);
+
+	CodeNode CodeNode::undefined(&CommandDescriptor::undefined);
+	CodeNode CodeNode::null(&CommandDescriptor::null);
 
 	CodeNode *CodeNode::allocate() {
 		// TODO: Garbage Collect in separate thread

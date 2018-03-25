@@ -41,17 +41,15 @@ namespace cpcompiler {
 	  args.GetReturnValue().Set(String::NewFromUtf8(isolate, "0.0.1"));
 	}
 
-	/*void Number(const FunctionCallbackInfo<Value>& args) {
-		auto n = CodeNode::allocate();
-		n->command = &CommandDescriptor::number;
-		n->param1.number = args[0]->NumberValue();
-		args.GetReturnValue().Set(wrapToObject(n, args.GetIsolate()));
-	}*/
 	void Construct(const FunctionCallbackInfo<Value>& args) {
-		/* TODO: if number */
-		auto n = CodeNode::allocate();
-		n->command = &CommandDescriptor::number;
-		n->param1.number = args[0]->NumberValue();
+		CodeNode *n = &CodeNode::undefined;
+
+		/* Number literal */
+		if (args[0]->IsNumber()) {
+			n = CodeNode::allocate();
+			n->command = &CommandDescriptor::number;
+			n->param1.number = args[0]->NumberValue();
+		}
 
 		args.GetReturnValue().Set(wrapToObject(n, args.GetIsolate()));
 	}

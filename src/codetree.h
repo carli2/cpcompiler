@@ -16,6 +16,9 @@ namespace cpcompiler {
 
 	class CodeNode {
 		public:
+			CodeNode() {}
+			CodeNode(CommandDescriptor *command): command(command) {}
+
 			CommandDescriptor *command;
 			arbitraryValue param1;
 			arbitraryValue param2;
@@ -29,6 +32,9 @@ namespace cpcompiler {
 				result->param2 = param2;
 				return result;
 			}
+
+			static CodeNode undefined;
+			static CodeNode null;
 
 		private:
 			static CodeNode allMemory[MAX_MEMORY];
@@ -47,6 +53,8 @@ namespace cpcompiler {
 			CommandDescriptor(const char *name, ExecuteFunction executeFunction): name(name), executeFunction(executeFunction) { commands[name] = this; }
 
 			/* some command descriptors forward */
+			static CommandDescriptor undefined;
+			static CommandDescriptor null;
 			static CommandDescriptor number;
 			static CommandDescriptor operator_add;
 
