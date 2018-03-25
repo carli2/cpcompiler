@@ -68,6 +68,8 @@ Code tree nodes are immutable with exception of optimizations that do not modify
 * lambda (function, scope) where scope is an object, adds all key/values of scope to the accessible
 * string (length, pointer) is a string literal
 * number (value) is a number (=double) literal
+* undefined - a empty value
+* null - a empty value
 * if (condition, code) is a condition
 * else (iftrue, iffalse) is a special node that can be used as code in if
 * while (condition, body) is a loop
@@ -108,6 +110,7 @@ C-P compiler is in a concept stage. This is the roadmap:
 Completed:
 * Research results for runtime compiler optimizations
 * Basic concept of the runtime environment
+* First code can be executed (add two numbers)
 
 Next steps:
 * Implement Garbage Collector and Tree operators
