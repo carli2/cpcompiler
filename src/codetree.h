@@ -19,7 +19,7 @@ namespace cpcompiler {
 			CommandDescriptor *command;
 			arbitraryValue param1;
 			arbitraryValue param2;
-			std::size_t gcInfo;
+			std::size_t gcInfo = 0; // unused
 
 			static CodeNode *allocate();
 			static inline CodeNode *allocate(CommandDescriptor *command, const arbitraryValue &param1, const arbitraryValue &param2) {
@@ -45,6 +45,11 @@ namespace cpcompiler {
 			static std::map<const char*, CommandDescriptor*> commands;
 
 			CommandDescriptor(const char *name, ExecuteFunction executeFunction): name(name), executeFunction(executeFunction) { commands[name] = this; }
+
+			/* some command descriptors forward */
+			static CommandDescriptor number;
+			static CommandDescriptor operator_add;
+
 	};
 
 	void deployCommands();
