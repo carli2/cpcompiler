@@ -14,16 +14,17 @@ namespace cpcompiler {
 			}
 			if (node->param1.node->command == &CommandDescriptor::native) {
 				/* call native function */
-				return node->param1.node->param1.function(context, node->param2.node, node->param1.node->param2.userdata);
+				NativeFunction fn = node->param1.node->param1.function;
+				return fn(context, node->param2.node, node->param1.node->param2.userdata);
 			}
 			return node;
 		}
 	}
 
 	/* register commands */
-	CommandDescriptor CommandDescriptor::call("call", &data::reflect, 2);
-	CommandDescriptor CommandDescriptor::native("native", &data::reflect, -1);
-	CommandDescriptor CommandDescriptor::lambda("lambda", &data::reflect, 2);
-	CommandDescriptor CommandDescriptor::argument("argument", &data::reflect, 0);
+	CommandDescriptor CommandDescriptor::call("call", &call::call, 2);
+	CommandDescriptor CommandDescriptor::native("native", &call::reflect, -1);
+	CommandDescriptor CommandDescriptor::lambda("lambda", &call::reflect, 2);
+	CommandDescriptor CommandDescriptor::argument("argument", &call::reflect, 0);
 }
 

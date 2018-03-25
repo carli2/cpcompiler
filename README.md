@@ -129,6 +129,7 @@ Next steps:
 # Build
 To test the code yourself, type in the following commands:
 ```
+$ node-gyp configure
 $ node-gyp build
 $ node runtests.js
 ```

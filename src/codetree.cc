@@ -24,7 +24,7 @@ namespace cpcompiler {
 		return result;
 	}
 
-	CodeNode *CodeNode::native(NativeFunction *function, void *userdata) {
+	CodeNode *CodeNode::native(NativeFunction function, void *userdata) {
 		CodeNode *result = allocate(&CommandDescriptor::native);
 		result->param1.function = function;
 		result->param2.userdata = userdata;

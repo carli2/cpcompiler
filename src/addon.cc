@@ -52,9 +52,12 @@ namespace cpcompiler {
 
 		/* Number literal */
 		if (args[0]->IsNumber()) {
-			n = CodeNode::allocate();
-			n->command = &CommandDescriptor::number;
-			n->param1.number = args[0]->NumberValue();
+			n = CodeNode::number(args[0]->NumberValue());
+		}
+
+		/* User function */
+		if (args[0]->IsFunction()) {
+			//n = CodeNode::native
 		}
 
 		/* node-based constructor */

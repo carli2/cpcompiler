@@ -21,7 +21,7 @@ namespace cpcompiler {
 		const char *string;
 		std::size_t integer;
 		double number;
-		NativeFunction *function;
+		NativeFunction function;
 		void *userdata;
 	};
 
@@ -51,10 +51,10 @@ namespace cpcompiler {
 			}
 
 			/* some default constructors */
-			static inline CodeNode *number(double number);
-			static inline CodeNode *integer(std::size_t integer);
-			static inline CodeNode *string(const char *string);
-			static inline CodeNode *native(NativeFunction *function, void *userdata);
+			static CodeNode *number(double number);
+			static CodeNode *integer(std::size_t integer);
+			static CodeNode *string(const char *string);
+			static CodeNode *native(NativeFunction function, void *userdata);
 
 			/* some constants to save allocations */
 			static CodeNode undefined;

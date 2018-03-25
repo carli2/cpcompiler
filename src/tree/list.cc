@@ -10,6 +10,6 @@ namespace cpcompiler {
 
 	/* register commands */
 	CommandDescriptor CommandDescriptor::emptylist("emptylist", &list::reflect, 0);
-	CommandDescriptor CommandDescriptor::null("list", &list::reflect, 2);
+	CommandDescriptor CommandDescriptor::list("list", &list::reflect, 2);
 }
 
