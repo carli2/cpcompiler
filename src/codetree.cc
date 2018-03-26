@@ -18,9 +18,10 @@ namespace cpcompiler {
 		return result;
 	}
 
-	CodeNode *CodeNode::string(const char *string) {
+	CodeNode *CodeNode::string(size_t length, const char *string) {
 		CodeNode *result = allocate(&CommandDescriptor::string);
-		result->param1.string = string;
+		result->param1.integer = length;
+		result->param2.string = string;
 		return result;
 	}
 

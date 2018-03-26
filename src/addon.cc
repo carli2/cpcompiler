@@ -2,6 +2,7 @@
 #include <node.h>
 #include <stdio.h>
 #include <sstream>
+#include <cstring>
 
 namespace cpcompiler {
 	using v8::FunctionCallbackInfo;
@@ -133,9 +134,17 @@ namespace cpcompiler {
 							n->param2.node = &CodeNode::undefined;
 						}
 					}
+				} else if (iter->second == &CommandDescriptor::string) {
+					// string literal
+					String::Utf8Value str(Local<String>::Cast(args[1]));
+					char *mem = (char *) malloc(str.length() + 1);
+					memcpy(mem, *str, str.length() + 1);
+					n = CodeNode::string(str.length(), mem);
+					// TODO: garbage collect later
 				}
 			} else {
-				n = v8ToCodeNode(args.GetIsolate(), args[0]);
+				// not found
+				n = &CodeNode::undefined;
 			}
 		} else {
 			n = v8ToCodeNode(args.GetIsolate(), args[0]);

@@ -8,6 +8,7 @@
 		"src/tree/data.cc",
 		"src/tree/call.cc",
 		"src/tree/list.cc",
+		"src/tree/objects.cc",
 		"src/tree/arithmetic.cc"
 	  ]
     }

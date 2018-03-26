@@ -14,7 +14,7 @@ namespace cpcompiler {
 				return result;
 			}
 			// TODO: string add, type conversion, error handling and much more
-			return NULL;
+			return &CodeNode::undefined;
 		}
 	}
 

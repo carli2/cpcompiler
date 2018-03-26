@@ -69,6 +69,13 @@ namespace cpcompiler {
 			static CommandDescriptor emptylist;
 			static CommandDescriptor list;
 
+			/* objects */
+			static CommandDescriptor get;
+			static CommandDescriptor set;
+			static CommandDescriptor scope;
+			static CommandDescriptor property;
+			static CommandDescriptor object;
+
 	};
 
 	/* a node all code and data trees are constructed from */
@@ -111,6 +118,9 @@ namespace cpcompiler {
 					else if (this->command == &CommandDescriptor::integer) {
 						out << ": " << this->param1.integer;
 					}
+					else if (this->command == &CommandDescriptor::string) {
+						out << ": \"" << this->param2.string << "\"";
+					}
 				}
 				out << std::endl;
 				if (this->command->nodeArguments >= 1) {
@@ -124,7 +134,7 @@ namespace cpcompiler {
 			/* some default constructors */
 			static CodeNode *number(double number);
 			static CodeNode *integer(std::size_t integer);
-			static CodeNode *string(const char *string);
+			static CodeNode *string(size_t length, const char *string);
 			static CodeNode *native(NativeFunction function, void *userdata);
 
 			/* some constants to save allocations */
