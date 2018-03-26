@@ -25,46 +25,6 @@ namespace cpcompiler {
 		void *userdata;
 	};
 
-	/* a node all code and data trees are constructed from */
-	class CodeNode {
-		public:
-			CodeNode() {}
-			CodeNode(CommandDescriptor *command): command(command) {}
-
-			CommandDescriptor *command; /* command */
-			arbitraryValue param1; /* 0-2 child nodes, not more. */
-			arbitraryValue param2;
-			std::size_t gcInfo = 0; // 0 = unused; gc info for garbage collector
-
-			static CodeNode *allocate(); /* get free space in a few cycles thanks to constant node size */
-			static inline CodeNode *allocate(CommandDescriptor *command) {
-				CodeNode *result = allocate();
-				result->command = command;
-				return result;
-			}
-			static inline CodeNode *allocate(CommandDescriptor *command, const arbitraryValue &param1, const arbitraryValue &param2) {
-				CodeNode *result = allocate();
-				result->command = command;
-				result->param1 = param1;
-				result->param2 = param2;
-				return result;
-			}
-
-			/* some default constructors */
-			static CodeNode *number(double number);
-			static CodeNode *integer(std::size_t integer);
-			static CodeNode *string(const char *string);
-			static CodeNode *native(NativeFunction function, void *userdata);
-
-			/* some constants to save allocations */
-			static CodeNode undefined;
-			static CodeNode null;
-
-		private:
-			static CodeNode allMemory[MAX_MEMORY]; /* our heap; hopefully sparsely occupied by OS */
-			static std::size_t nextPtr;
-	};
-
 	/** executing a node:
 	 * @param context holds all variables, global object and so on
 	 * @param node is the node to evaluate
@@ -105,5 +65,50 @@ namespace cpcompiler {
 			static CommandDescriptor emptylist;
 			static CommandDescriptor list;
 
+	};
+
+	/* a node all code and data trees are constructed from */
+	class CodeNode {
+		public:
+			CodeNode() {}
+			CodeNode(CommandDescriptor *command): command(command) {}
+
+			CommandDescriptor *command; /* command */
+			arbitraryValue param1; /* 0-2 child nodes, not more. */
+			arbitraryValue param2;
+			std::size_t gcInfo = 0; // 0 = unused; gc info for garbage collector
+
+			static CodeNode *allocate(); /* get free space in a few cycles thanks to constant node size */
+			static inline CodeNode *allocate(CommandDescriptor *command) {
+				CodeNode *result = allocate();
+				result->command = command;
+				return result;
+			}
+			static inline CodeNode *allocate(CommandDescriptor *command, const arbitraryValue &param1, const arbitraryValue &param2) {
+				CodeNode *result = allocate();
+				result->command = command;
+				result->param1 = param1;
+				result->param2 = param2;
+				return result;
+			}
+
+			/* the heart: Execute */
+			CodeNode *exec(CodeNode *context) {
+				return this->command->executeFunction(context, this);
+			}
+
+			/* some default constructors */
+			static CodeNode *number(double number);
+			static CodeNode *integer(std::size_t integer);
+			static CodeNode *string(const char *string);
+			static CodeNode *native(NativeFunction function, void *userdata);
+
+			/* some constants to save allocations */
+			static CodeNode undefined;
+			static CodeNode null;
+
+		private:
+			static CodeNode allMemory[MAX_MEMORY]; /* our heap; hopefully sparsely occupied by OS */
+			static std::size_t nextPtr;
 	};
 }

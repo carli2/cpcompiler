@@ -4,10 +4,13 @@ namespace cpcompiler {
 	// declare anonymous
 	namespace operators {
 		CodeNode *operator_add(CodeNode *context, CodeNode *node) {
-			if (node->param1.node->command == &CommandDescriptor::number && node->param2.node->command == &CommandDescriptor::number) {
+			CodeNode *left = node->param1.node->exec(context);
+			CodeNode *right = node->param2.node->exec(context);
+
+			if (left->command == &CommandDescriptor::number && right->command == &CommandDescriptor::number) {
 				CodeNode *result = CodeNode::allocate();
 				result->command = &CommandDescriptor::number;
-				result->param1.number = node->param1.node->param1.number + node->param2.node->param1.number;
+				result->param1.number = left->param1.number + right->param1.number;
 				return result;
 			}
 			// TODO: string add, type conversion, error handling and much more

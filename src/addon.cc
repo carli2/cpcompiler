@@ -16,11 +16,31 @@ namespace cpcompiler {
 	using v8::Value;
 	using v8::External;
 
+	CodeNode *nativeExecute(CodeNode *context, CodeNode *args, void *userdata);
+
 	Local<Value> nodeToV8(Isolate *isolate, CodeNode *node) {
 		if (node && node->command == &CommandDescriptor::number) {
 			return v8::Number::New(isolate, node->param1.number);
 		}
 		return v8::Undefined(isolate);
+	}
+
+	CodeNode *v8ToCodeNode(Isolate *isolate, Local<Value> val) {
+		CodeNode *n = &CodeNode::undefined;
+
+		/* Number literal */
+		if (val->IsNumber()) {
+			n = CodeNode::number(val->NumberValue());
+		}
+
+		/* User function */
+		else if (val->IsFunction()) {
+			// TODO: add destructor callback
+			auto p = new v8::NonCopyablePersistentTraits<Function>::NonCopyablePersistent(isolate, Handle<Function>::Cast(val));
+			n = CodeNode::native(&nativeExecute, p);
+		}
+
+		return n;
 	}
 
 	void Exec(const FunctionCallbackInfo<Value>& args) {
@@ -29,9 +49,9 @@ namespace cpcompiler {
 			CodeNode *node = (CodeNode *) External::Cast(*args.This()->GetInternalField(0))->Value();
 
 			// execute
-			node = node->command->executeFunction(&CodeNode::null, node); // TODO: retrieve context
+			node = node->exec(&CodeNode::null);
 
-			// output primitive value (TODO: put in function, make recursive)
+			// output result
 			args.GetReturnValue().Set(nodeToV8(args.GetIsolate(), node));
 		}
 	}
@@ -67,29 +87,15 @@ namespace cpcompiler {
 			callargs[argNr++] = nodeToV8(isolate, node);
 			args = args->param2.node;
 		}
-		fn->Call(global, argNr, callargs);
-		return &CodeNode::undefined;
+		auto result = fn->Call(global, argNr, callargs);
+		return v8ToCodeNode(isolate, result);
 	}
-
-	Persistent<Function> gfn;
 
 	void Construct(const FunctionCallbackInfo<Value>& args) {
 		CodeNode *n = &CodeNode::undefined;
 
-		/* Number literal */
-		if (args[0]->IsNumber()) {
-			n = CodeNode::number(args[0]->NumberValue());
-		}
-
-		/* User function */
-		if (args[0]->IsFunction()) {
-			auto p = new v8::NonCopyablePersistentTraits<Function>::NonCopyablePersistent(args.GetIsolate(), Handle<Function>::Cast(args[0]));
-			String::Utf8Value str(Handle<Function>::Cast(args[0])->GetName()->ToString());
-			n = CodeNode::native(&nativeExecute, p);
-		}
-
 		/* node-based constructor */
-		else if (args[0]->IsString()) {
+		if (args[0]->IsString()) {
 			String::Utf8Value str(args[0]->ToString());
 			auto iter = CommandDescriptor::commands.find(*str);
 			if (iter != CommandDescriptor::commands.end()) {
@@ -111,7 +117,11 @@ namespace cpcompiler {
 						}
 					}
 				}
+			} else {
+				n = v8ToCodeNode(args.GetIsolate(), args[0]);
 			}
+		} else {
+			n = v8ToCodeNode(args.GetIsolate(), args[0]);
 		}
 
 		args.GetReturnValue().Set(wrapToObject(n, args.GetIsolate()));

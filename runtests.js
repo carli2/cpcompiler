@@ -21,3 +21,13 @@ var code = cpcompiler.node('call', print,
 );
 code.exec();
 
+var returnNumber = cpcompiler.node(function () {
+	return 123;
+});
+var addSomething = cpcompiler.node('operator_add',
+	x=cpcompiler.node('call', returnNumber, cpcompiler.node('emptylist')),
+	cpcompiler.node(1)
+);
+console.log('returnNumber() = ' + x.exec());
+console.log('returnNumber() + 1 = ' + addSomething.exec());
+
