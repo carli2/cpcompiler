@@ -74,6 +74,8 @@ Code tree nodes are immutable with exception of optimizations that do not modify
 * number (value) is a number (=double) literal
 * undefined - a empty value
 * null - a empty value
+* true - true literal
+* false - false literal
 * if (condition, code) is a condition
 * else (iftrue, iffalse) is a special node that can be used as code in if
 * while (condition, body) is a loop

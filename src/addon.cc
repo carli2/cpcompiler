@@ -1,6 +1,7 @@
-#include <node.h>
 #include "codetree.h"
+#include <node.h>
 #include <stdio.h>
+#include <sstream>
 
 namespace cpcompiler {
 	using v8::FunctionCallbackInfo;
@@ -43,6 +44,21 @@ namespace cpcompiler {
 		return n;
 	}
 
+	void Print(const FunctionCallbackInfo<Value>& args) {
+		if (args.This()->InternalFieldCount()) {
+			// fetch CodeNode object
+			CodeNode *node = (CodeNode *) External::Cast(*args.This()->GetInternalField(0))->Value();
+			std::string prefix = "";
+			if (args[0]->IsString()) {
+				String::Utf8Value str(args[0]->ToString());
+				prefix = *str;
+			}
+			std::stringstream ss;
+			node->print(ss, prefix);
+			args.GetReturnValue().Set(String::NewFromUtf8(args.GetIsolate(), ss.str().data()));
+		}
+	}
+
 	void Exec(const FunctionCallbackInfo<Value>& args) {
 		if (args.This()->InternalFieldCount()) {
 			// fetch CodeNode object
@@ -63,6 +79,7 @@ namespace cpcompiler {
 		auto o = wrapper->NewInstance();
 		o->SetInternalField(0, External::New(isolate, node));
 		NODE_SET_METHOD(o, "exec", Exec); // TODO: put in prototype
+		NODE_SET_METHOD(o, "print", Print); // TODO: put in prototype
 		// TODO: make persistent and weak with destruction callback
 		return o;
 	}

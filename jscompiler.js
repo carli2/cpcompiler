@@ -17,4 +17,8 @@ function compile(expr) {
 function compileAndExecute(expr, ...args) {
 	return compile(expr).exec(...args);
 }
+
 console.log(compileAndExecute('1 + 2'));
+
+var codeTree = compile('console.log(123)');
+console.log(codeTree.print())

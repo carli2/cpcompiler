@@ -10,17 +10,23 @@ var grammar = {
 			["undefined", "return 'UNDEFINED';"],
 			[",", "return ',';"],
 			[";", "return ';';"],
+			["\\(", "return '(';"],
+			["\\)", "return ')';"],
 			["\\+", "return '+';"],
 			["-?[0-9]+(?:\\.[0-9]+)?", "return 'NUMBER';"],
+			["[A-Za-z_\\$][A-Za-z_\\$]+", "return 'IDENTIFIER';"],
 			["\\.", "return '.';"]
 		]
 	},
 
 	"operators": [
+		["left", ","],
 		["left", "+", "-"],
 		["left", "*", "/"],
 		["left", "^"],
-		["left", "UMINUS"]
+		["left", "."],
+		["left", "UMINUS"],
+		["left", "("]
 	],
 
 	"start": "script",
@@ -29,10 +35,21 @@ var grammar = {
 		"script": [["e", "return $1;"]],
 		"e": [
 			["NULL", "$$ = ['null'];"],
+			["UNDEFINED", "$$ = ['undefined'];"],
+			["TRUE", "$$ = ['true'];"],
+			["FALSE", "$$ = ['false'];"],
+
 			["e + e", "$$ = ['operator_add', $1, $3];"],
+
+			["IDENTIFIER", "$$ = ['get', ['scope'], ['string', $1]];"],
+			["e . IDENTIFIER", "$$ = ['get', $1, ['string', $3]];"],
+			["e list", "$$ = ['call', $1, $2];", {"prec": "CALL"}],
 			["NUMBER", "$$ = [Number(yytext)];"]
 			// ["- e", "$$ = compiler.node('operator_neg', $2);", {"prec": "UMINUS"} ]
-		]
+		],
+		"list": [["( liststart", "$$ = $2;"]],
+		"liststart": [[")", "$$ = ['emptylist'];"], ["e listtail", "$$ = ['list', $1, $2];"]],
+		"listtail": [[")", "$$ = ['emptylist'];"], [", e listtail", "$$ = ['list', $2, $3];"]]
 	}
 };
 

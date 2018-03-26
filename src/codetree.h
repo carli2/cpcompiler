@@ -1,5 +1,7 @@
 #include <cstddef>
 #include <map>
+#include <ostream>
+#include <string>
 
 namespace cpcompiler {
 	class CommandDescriptor;
@@ -48,6 +50,8 @@ namespace cpcompiler {
 			/* data */
 			static CommandDescriptor undefined;
 			static CommandDescriptor null;
+			static CommandDescriptor true_;
+			static CommandDescriptor false_;
 			static CommandDescriptor number;
 			static CommandDescriptor string;
 			static CommandDescriptor integer;
@@ -93,8 +97,28 @@ namespace cpcompiler {
 			}
 
 			/* the heart: Execute */
-			CodeNode *exec(CodeNode *context) {
+			inline CodeNode *exec(CodeNode *context) {
 				return this->command->executeFunction(context, this);
+			}
+
+			void print(std::ostream &out, const std::string &prefix) {
+				out << prefix.data();
+				out << this->command->name;
+				if (this->command->nodeArguments == -1) {
+					if (this->command == &CommandDescriptor::number) {
+						out << ": " << this->param1.number;
+					}
+					else if (this->command == &CommandDescriptor::integer) {
+						out << ": " << this->param1.integer;
+					}
+				}
+				out << std::endl;
+				if (this->command->nodeArguments >= 1) {
+					this->param1.node->print(out, prefix + "  ");
+				}
+				if (this->command->nodeArguments >= 2) {
+					this->param2.node->print(out, prefix + "  ");
+				}
 			}
 
 			/* some default constructors */
