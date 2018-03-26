@@ -5,7 +5,7 @@ namespace cpcompiler {
 	class CommandDescriptor;
 	class CodeNode;
 
-	const std::size_t MAX_MEMORY = 2 << 24;
+	const std::size_t MAX_MEMORY = 2 << 12; // 24
 
 	/** for custom functions:
 	 * @param context holds all variables, global object and so on

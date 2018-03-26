@@ -142,6 +142,28 @@ var numberb = cpcompiler.node(1)
 var numberc = cpcompiler.node('operator_add', numbera, numberb);
 console.log(numberc.exec());
 ```
+the result:
+```
+12+1=13
+```
+
+You can also call back into JavaScript:
+```
+var print = cpcompiler.node(function foo(value) {
+	console.log('result is ' + value);
+});
+var code = cpcompiler.node('call', print,
+	cpcompiler.node('list',
+		numberc,
+		cpcompiler.node('emptylist')
+	)
+);
+code.exec();
+```
+the result:
+```
+result is 13
+```
 
 This way you can build your own code tree from nodes. One TODO is to create a JavaScript compiler written in JavaScript that will build such a tree from a given input JavaScript.
 

@@ -10,8 +10,8 @@ var numberc = cpcompiler.node('operator_add', numbera, numberb);
 console.log(numbera.exec() + '+' + numberb.exec() + '=' + numberc.exec());
 
 // call a print function
-var print = cpcompiler.node(function (value) {
-	console.log('result is ', value);
+var print = cpcompiler.node(function foo(value) {
+	console.log('result is ' + value);
 });
 var code = cpcompiler.node('call', print,
 	cpcompiler.node('list',

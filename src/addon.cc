@@ -1,6 +1,6 @@
 #include <node.h>
 #include "codetree.h"
-//#include <stdio.h>
+#include <stdio.h>
 
 namespace cpcompiler {
 	using v8::FunctionCallbackInfo;
@@ -16,6 +16,13 @@ namespace cpcompiler {
 	using v8::Value;
 	using v8::External;
 
+	Local<Value> nodeToV8(Isolate *isolate, CodeNode *node) {
+		if (node && node->command == &CommandDescriptor::number) {
+			return v8::Number::New(isolate, node->param1.number);
+		}
+		return v8::Undefined(isolate);
+	}
+
 	void Exec(const FunctionCallbackInfo<Value>& args) {
 		if (args.This()->InternalFieldCount()) {
 			// fetch CodeNode object
@@ -25,9 +32,7 @@ namespace cpcompiler {
 			node = node->command->executeFunction(&CodeNode::null, node); // TODO: retrieve context
 
 			// output primitive value (TODO: put in function, make recursive)
-			if (node && node->command == &CommandDescriptor::number) {
-				args.GetReturnValue().Set(v8::Number::New(args.GetIsolate(), node->param1.number));
-			}
+			args.GetReturnValue().Set(nodeToV8(args.GetIsolate(), node));
 		}
 	}
 
@@ -47,6 +52,27 @@ namespace cpcompiler {
 		args.GetReturnValue().Set(String::NewFromUtf8(isolate, "0.0.2"));
 	}
 
+	CodeNode *nativeExecute(CodeNode *context, CodeNode *args, void *userdata) {
+		v8::Isolate*  isolate = v8::Isolate::GetCurrent();
+		auto global = isolate->GetCurrentContext()->Global();
+
+		auto fn = Local<Function>::New(isolate, *(const Persistent<Function>*) userdata);
+		Local<Value> callargs[20];
+		int argNr = 0;
+		while (argNr < 20 && args->command == &CommandDescriptor::list) {
+			CodeNode *node = args->param1.node; // fetch argument
+			// evaluate argument
+			node = node->command->executeFunction(&CodeNode::null, node); // TODO: retrieve context
+			// put into v8 array
+			callargs[argNr++] = nodeToV8(isolate, node);
+			args = args->param2.node;
+		}
+		fn->Call(global, argNr, callargs);
+		return &CodeNode::undefined;
+	}
+
+	Persistent<Function> gfn;
+
 	void Construct(const FunctionCallbackInfo<Value>& args) {
 		CodeNode *n = &CodeNode::undefined;
 
@@ -57,7 +83,9 @@ namespace cpcompiler {
 
 		/* User function */
 		if (args[0]->IsFunction()) {
-			//n = CodeNode::native
+			auto p = new v8::NonCopyablePersistentTraits<Function>::NonCopyablePersistent(args.GetIsolate(), Handle<Function>::Cast(args[0]));
+			String::Utf8Value str(Handle<Function>::Cast(args[0])->GetName()->ToString());
+			n = CodeNode::native(&nativeExecute, p);
 		}
 
 		/* node-based constructor */
