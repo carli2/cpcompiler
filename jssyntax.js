@@ -10,15 +10,29 @@ var grammar = {
 			["undefined", "return 'UNDEFINED';"],
 			[",", "return ',';"],
 			[";", "return ';';"],
+			["\\+", "return '+';"],
+			["-?[0-9]+(?:\\.[0-9]+)?", "return 'NUMBER';"],
 			["\\.", "return '.';"]
 		]
 	},
+
+	"operators": [
+		["left", "+", "-"],
+		["left", "*", "/"],
+		["left", "^"],
+		["left", "UMINUS"]
+	],
 
 	"start": "script",
 
 	"bnf": {
 		"script": [["e", "return $1;"]],
-		"e": [["NULL", "$$ = null;"]]
+		"e": [
+			["NULL", "$$ = ['null'];"],
+			["e + e", "$$ = ['operator_add', $1, $3];"],
+			["NUMBER", "$$ = [Number(yytext)];"]
+			// ["- e", "$$ = compiler.node('operator_neg', $2);", {"prec": "UMINUS"} ]
+		]
 	}
 };
 
