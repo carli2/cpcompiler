@@ -1,0 +1,30 @@
+{
+  "name": "cpcompiler",
+  "version": "0.0.2",
+  "description": "C-P Compiler",
+  "main": "jscompiler.js",
+  "scripts": {
+    "test": "runtests.js",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carli2/cpcompiler.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "compiler",
+    "optimizer",
+    "JIT"
+  ],
+  "author": "Carl-Philip Hänsch",
+  "license": "LGPL-3.0",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/carli2/cpcompiler/issues"
+  },
+  "homepage": "https://github.com/carli2/cpcompiler#readme",
+  "dependencies": {
+    "jison": "^0.4.18"
+  }
+}
