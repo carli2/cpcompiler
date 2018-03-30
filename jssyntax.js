@@ -15,6 +15,8 @@ var grammar = {
 			["\\+", "return '+';"],
 			["-?[0-9]+(?:\\.[0-9]+)?", "return 'NUMBER';"],
 			["[A-Za-z_\\$][A-Za-z_\\$]+", "return 'IDENTIFIER';"],
+			["\"(?:[^\\\"]|\\[^])*\"", "yytext = JSON.parse(yytext); return 'STRING';"],
+			["'(?:[^\\\"]|\\[^])*'", "yytext = JSON.parse(yytext); return 'STRING';"],
 			["\\.", "return '.';"]
 		]
 	},
@@ -44,7 +46,9 @@ var grammar = {
 			["IDENTIFIER", "$$ = ['get', ['scope'], ['string', $1]];"],
 			["e . IDENTIFIER", "$$ = ['get', $1, ['string', $3]];"],
 			["e list", "$$ = ['call', $1, $2];", {"prec": "CALL"}],
-			["NUMBER", "$$ = [Number(yytext)];"]
+
+			["NUMBER", "$$ = [Number(yytext)];"],
+			["STRING", "$$ = ['string', yytext];"]
 			// ["- e", "$$ = compiler.node('operator_neg', $2);", {"prec": "UMINUS"} ]
 		],
 		"list": [["( liststart", "$$ = $2;"]],
