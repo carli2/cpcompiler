@@ -58,28 +58,39 @@ The fourth stage will utilize the LLVM compiler in order to create highly optimi
 Every code tree node is 32 bytes wide and contains 4 64bit values: Pointer to the instruction descriptor, first parameter (pointer to code/data node, integer literal or string pointer), second parameter, garbage collector metadata
 
 Code tree nodes are immutable with exception of optimizations that do not modify behaviour. The following node types are available:
-* command (firstCommand, secondCommand) executes these two commands in series
 * operator_add (firstOperand, secondOperand) arbitrary operators
 * get (object, key) reads property (string or integer) out of object
 * property (key, value) builds a key/value pair of which you can compose objects
 * object (leftSubTree, rightSubTree) builds balanced tree of properties that form a object
 * set (object, property) returns a updated object
-* emptylist () is the end of a linked list or an empty list (e.g. for call parameters)
+
+* var (value) represents the only mutable data structure in the code tree - a value that may change
+* setvar (var, newvalue) changes the value of a variable
+* readvar (var) reads out the value of a variable
+* newvar (value) creates a new variable
+
 * list (element, tail) is a element of a linked list
+* emptylist () is the end of a linked list or an empty list (e.g. for call parameters)
 * call (function, parameters) calls the function with these parameters
 * native (v8::Function)
 * lambda (function, scope) where scope is an object, adds all key/values of scope to the accessible
-* argumenet (index) accessing a function argument
+* argument (index) accessing a function argument
+
 * string (length, pointer) is a string literal
 * number (value) is a number (=double) literal
 * undefined - a empty value
 * null - a empty value
 * true - true literal
 * false - false literal
+
+* command (firstCommand, secondCommand) executes these two commands in series
 * if (condition, code) is a condition
 * else (iftrue, iffalse) is a special node that can be used as code in if
 * while (condition, body) is a loop
 * scope () returns the actual scope (allows you to access variables etc)
+* return (value) leaves the current control flow to the next call. Only allowed inside call, command, if, else, while, try
+* throw (value) leaves the current control flow to the next try block. Only allowed inside call, command, if, else, while, try
+* try (code, callback) adds a catch block to the stack; callback gets called in case of a throw statement
 
 `console.log('Hello World')` translates to the following tree:
 * call
