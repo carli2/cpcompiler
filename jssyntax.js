@@ -57,7 +57,7 @@ var grammar = {
 			["IDENTIFIER", "$$ = ['get', ['scope'], ['string', $1]];"],
 			["e . IDENTIFIER", "$$ = ['get', $1, ['string', $3]];"],
 			["e list", "$$ = ['call', $1, $2];", {"prec": "CALL"}],
-			["FUNCTION ( decllist ) { cmd }", "var args = $3, code = $6; $$ = ['lambda', (function applyArgs(node) {if (node.constructor !== Array) return node; /* TODO: nested lambda: add scope args */ var argidx = -1; if (node[0] == 'get' && node[1][0] == 'scope' && node[2][0] == 'string' && (argidx = args.indexOf(node[2][1])) != -1) { return ['argument', argidx]; } return node.map(applyArgs);})(code), ['null']];", {"prec": "CALL"}],
+			["FUNCTION ( decllist ) { cmd }", "$$ = ['lambda', $6, $3.map(function (x, i) { return ['property', ['string', x], ['newvar', ['argument', i]]] }).reduce(function (a, x) { return ['object', a, x]; })];", {"prec": "CALL"}],
 
 			["NUMBER", "$$ = [Number(yytext)];"],
 			["STRING", "$$ = ['string', yytext];"]

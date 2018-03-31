@@ -66,6 +66,11 @@ namespace cpcompiler {
 			static CommandDescriptor argument;
 			static CommandDescriptor return_;
 
+			/* mutable */
+			static CommandDescriptor var;
+			static CommandDescriptor setvar;
+			static CommandDescriptor newvar;
+
 			static CommandDescriptor try_;
 			static CommandDescriptor throw_;
 

@@ -5,7 +5,13 @@ namespace cpcompiler {
 	namespace operators {
 		CodeNode *operator_add(CodeNode *context, CodeNode *node) {
 			CodeNode *left = node->param1.node->exec(context);
+			if (left->command == &CommandDescriptor::throw_) {
+				return left;
+			}
 			CodeNode *right = node->param2.node->exec(context);
+			if (right->command == &CommandDescriptor::throw_) {
+				return right;
+			}
 
 			if (left->command == &CommandDescriptor::number && right->command == &CommandDescriptor::number) {
 				CodeNode *result = CodeNode::allocate();

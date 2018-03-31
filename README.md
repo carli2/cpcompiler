@@ -67,7 +67,6 @@ Code tree nodes are immutable with exception of optimizations that do not modify
 
 * var (value) represents the only mutable data structure in the code tree - a value that may change
 * setvar (var, newvalue) changes the value of a variable
-* readvar (var) reads out the value of a variable
 * newvar (value) creates a new variable
 
 * list (element, tail) is a element of a linked list
