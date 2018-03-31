@@ -128,12 +128,13 @@ C-P compiler is in a concept stage. This is the roadmap:
 Completed:
 * Research results for runtime compiler optimizations
 * Basic concept of the runtime environment
-* First code can be executed (add two numbers)
+* First code can be executed (add two numbers, callbacks to JS)
+* Library interface for node.js
+* Implement a basic JS parser+compiler in JavaScript
 
 Next steps:
 * Implement Garbage Collector and Tree operators
-* Library interface for node.js
-* Implement a basic JS parser+compiler in JavaScript
+* Complete JavaScript syntax
 * Implement code tree optimizations
 * Start working on the JIT stages
 * Add a module that allows to create executables with integrated runtime environment
@@ -146,7 +147,8 @@ To test the code yourself, type in the following commands:
 $ npm install
 $ node-gyp configure
 $ node-gyp build
-$ node runtests.js
+$ node runtests.js # for raw CodeNode creation
+$ node jscompiler.js # testing full JavaScript parser&compiler
 ```
 
 # Testing and TODO
