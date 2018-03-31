@@ -13,7 +13,7 @@ namespace cpcompiler {
 	CommandDescriptor CommandDescriptor::null("null", &data::reflect, 0);
 	CommandDescriptor CommandDescriptor::true_("true", &data::reflect, 0);
 	CommandDescriptor CommandDescriptor::false_("false", &data::reflect, 0);
-	CommandDescriptor CommandDescriptor::number("number", &data::reflect);
-	CommandDescriptor CommandDescriptor::integer("integer", &data::reflect);
-	CommandDescriptor CommandDescriptor::string("string", &data::reflect);
+	CommandDescriptor CommandDescriptor::number("number", &data::reflect, -1);
+	CommandDescriptor CommandDescriptor::integer("integer", &data::reflect, -1);
+	CommandDescriptor CommandDescriptor::string("string", &data::reflect, -1);
 }

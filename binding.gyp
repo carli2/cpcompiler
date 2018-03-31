@@ -9,7 +9,8 @@
 		"src/tree/call.cc",
 		"src/tree/list.cc",
 		"src/tree/objects.cc",
-		"src/tree/arithmetic.cc"
+		"src/tree/arithmetic.cc",
+		"src/tree/controlflow.cc"
 	  ]
     }
   ]

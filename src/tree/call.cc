@@ -25,6 +25,10 @@ namespace cpcompiler {
 	CommandDescriptor CommandDescriptor::call("call", &call::call, 2);
 	CommandDescriptor CommandDescriptor::native("native", &call::reflect, -1);
 	CommandDescriptor CommandDescriptor::lambda("lambda", &call::reflect, 2);
-	CommandDescriptor CommandDescriptor::argument("argument", &call::reflect, 0);
+	CommandDescriptor CommandDescriptor::argument("argument", &call::reflect, -1);
+	CommandDescriptor CommandDescriptor::return_("return", &call::reflect, 1);
+
+	CommandDescriptor CommandDescriptor::try_("try", &call::reflect, 2);
+	CommandDescriptor CommandDescriptor::throw_("throw", &call::reflect, 1);
 }
 

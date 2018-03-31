@@ -141,6 +141,13 @@ namespace cpcompiler {
 					memcpy(mem, *str, str.length() + 1);
 					n = CodeNode::string(str.length(), mem);
 					// TODO: garbage collect later
+				} else if (iter->second == &CommandDescriptor::integer) {
+					// integer literal
+					n = CodeNode::integer(args[1]->ToInteger()->Value());
+				} else if (iter->second == &CommandDescriptor::argument) {
+					// argument literal
+					n = CodeNode::integer(args[1]->ToInteger()->Value());
+					n->command = &CommandDescriptor::argument;
 				}
 			} else {
 				// not found

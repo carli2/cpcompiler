@@ -61,8 +61,9 @@ Code tree nodes are immutable with exception of optimizations that do not modify
 * operator_add (firstOperand, secondOperand) arbitrary operators
 * get (object, key) reads property (string or integer) out of object
 * property (key, value) builds a key/value pair of which you can compose objects
-* object (leftSubTree, rightSubTree) builds balanced tree of properties that form a object
+* object (leftSubTree, rightSubTree) builds balanced tree of properties that form a object (real objects are also wrapped by a var to be mutable)
 * set (object, property) returns a updated object
+* wrapped (v8::Object)
 
 * var (value) represents the only mutable data structure in the code tree - a value that may change
 * setvar (var, newvalue) changes the value of a variable
