@@ -151,6 +151,7 @@ namespace cpcompiler {
 				}
 			} else {
 				// not found
+				printf("Warning: command not found: %s\n", *str);
 				n = &CodeNode::undefined;
 			}
 		} else {

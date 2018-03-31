@@ -2,7 +2,7 @@
 
 namespace cpcompiler {
 	// declare anonymous
-	namespace mutable {
+	namespace mutable_ {
 		CodeNode *var(CodeNode *context, CodeNode *node) {
 			// reflect content
 			return node->param1.node;
@@ -26,15 +26,15 @@ namespace cpcompiler {
 			}
 			// allocate
 			CodeNode *var = CodeNode::allocate(&CommandDescriptor::var);
-			var->param1->node = val;
+			var->param1.node = val;
 			return var;
 		}
 	}
 
 	// register all operators
-	CommandDescriptor CommandDescriptor::var("var", &mutable::var, 1);
-	CommandDescriptor CommandDescriptor::setvar("setvar", &mutable::setvar, 2);
-	CommandDescriptor CommandDescriptor::newvar("newvar", &mutable::newvar, 1);
+	CommandDescriptor CommandDescriptor::var("var", &mutable_::var, 1);
+	CommandDescriptor CommandDescriptor::setvar("setvar", &mutable_::setvar, 2);
+	CommandDescriptor CommandDescriptor::newvar("newvar", &mutable_::newvar, 1);
 }
 
 

@@ -10,7 +10,8 @@
 		"src/tree/list.cc",
 		"src/tree/objects.cc",
 		"src/tree/arithmetic.cc",
-		"src/tree/controlflow.cc"
+		"src/tree/controlflow.cc",
+		"src/tree/mutable.cc"
 	  ]
     }
   ]

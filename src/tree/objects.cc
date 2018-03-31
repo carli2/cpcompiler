@@ -3,6 +3,23 @@
 namespace cpcompiler {
 	// declare anonymous
 	namespace objects {
+		CodeNode *reflect(CodeNode *context, CodeNode *node) {
+			return context;
+		}
+
+		CodeNode *reflectExecute(CodeNode *context, CodeNode *node) {
+			CodeNode *a = node->param1.node->exec(context);
+			if (a->command == &CommandDescriptor::throw_) return a;
+			CodeNode *b = node->param2.node->exec(context);
+			if (b->command == &CommandDescriptor::throw_) return b;
+			if (node->param1.node == a && node->param2.node == b) return node;
+
+			CodeNode *result = CodeNode::allocate(node->command);
+			result->param1.node = a;
+			result->param2.node = b;
+			return result;
+		}
+
 		CodeNode *scope(CodeNode *context, CodeNode *node) {
 			return context;
 		}
@@ -11,16 +28,20 @@ namespace cpcompiler {
 			// TODO: read property from object
 			return &CodeNode::undefined;
 		}
+
+		CodeNode *set(CodeNode *context, CodeNode *node) {
+			// TODO: write property to object
+			return &CodeNode::undefined;
+		}
 	}
 
 	// register all operators
 	CommandDescriptor CommandDescriptor::scope("scope", &objects::scope, 0);
 	CommandDescriptor CommandDescriptor::get("get", &objects::get, 2);
-	/* TODO:
-	 * property (key, value) builds a key/value pair of which you can compose objects
-	 * object (leftSubTree, rightSubTree) builds balanced tree of properties that form a object
-	 * set (object, property) returns a updated object
-	 */
+	CommandDescriptor CommandDescriptor::set("set", &objects::set, 2);
+
+	CommandDescriptor CommandDescriptor::property("property", &objects::reflectExecute, 2);
+	CommandDescriptor CommandDescriptor::object("object", &objects::reflectExecute, 2);
 }
 
 
