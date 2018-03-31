@@ -10,6 +10,10 @@ var grammar = {
 			["undefined", "return 'UNDEFINED';"],
 			["function", "return 'FUNCTION';"],
 			["return", "return 'RETURN';"],
+			["if", "return 'IF';"],
+			["while", "return 'WHILE';"],
+			["break", "return 'BREAK';"],
+			["else", "return 'ELSE';"],
 			[",", "return ',';"],
 			[";", "return ';';"],
 			["{", "return '{';"],
@@ -26,7 +30,10 @@ var grammar = {
 	},
 
 	"operators": [
+		["left", ";"],
 		["left", ","],
+		["left", "||"],
+		["left", "&&"],
 		["left", "+", "-"],
 		["left", "*", "/"],
 		["left", "^"],
@@ -38,7 +45,7 @@ var grammar = {
 	"start": "script",
 
 	"bnf": {
-		"script": [["e", "return $1;"]],
+		"script": [["cmd", "return $1;"]],
 		"e": [
 			["NULL", "$$ = ['null'];"],
 			["UNDEFINED", "$$ = ['undefined'];"],
@@ -58,8 +65,14 @@ var grammar = {
 		],
 
 		"cmd": [
-			["e ;", "$$ = $1;"],
-			["RETURN e ;", "$$ = ['return', $2];"]
+			["e", "$$ = $1;"],
+			["RETURN e", "$$ = ['return', $2];"],
+			["BREAK", "$$ = ['break'];"],
+			["IF ( e ) { cmd }", "$$ = ['if', $3, $6];"],
+			["IF ( e ) { cmd } ELSE { cmd }", "$$ = ['if', $3, ['else', $6, $10]];"],
+			["WHILE ( e ) { cmd }", "$$ = ['while', $3, $6];"],
+			["cmd ;", "$$ = $1;"],
+			["cmd ; cmd", "$$ = ['command', $1, $3];", {"prec": ";"}]
 		],
 
 		"list": [["( liststart", "$$ = $2;"]],

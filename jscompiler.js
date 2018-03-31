@@ -9,6 +9,9 @@ function compile(expr) {
 				ast[i] = pack(ast[i]);
 			}
 		}
+		if (ast.constructor !== Array) {
+			throw new Error('invalid ast: ' + JSON.stringify(ast));
+		}
 		return cpcompiler.node.apply(cpcompiler.node, ast);
 	}
 	return pack(ast);
@@ -24,4 +27,6 @@ console.log(fn.print());
 console.log('(function (x) { return x + 1; })(5) =', fn.exec(5));
 
 var codeTree = compile('console.log("Hello World")');
-console.log(codeTree.print())
+console.log(codeTree.print());
+
+console.log(compile('while (a) { print("Hello World"); break; }').print());

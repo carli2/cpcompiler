@@ -85,6 +85,7 @@ namespace cpcompiler {
 			static CommandDescriptor if_;
 			static CommandDescriptor else_;
 			static CommandDescriptor while_;
+			static CommandDescriptor break_;
 
 	};
 
