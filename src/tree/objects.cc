@@ -42,6 +42,8 @@ namespace cpcompiler {
 
 	CommandDescriptor CommandDescriptor::property("property", &objects::reflectExecute, 2);
 	CommandDescriptor CommandDescriptor::object("object", &objects::reflectExecute, 2);
+	CommandDescriptor CommandDescriptor::emptyobject("emptyobject", &objects::reflect, 0);
+	CommandDescriptor CommandDescriptor::prototype("prototype", &objects::reflectExecute, 2);
 }
 
 

@@ -83,7 +83,9 @@ namespace cpcompiler {
 			static CommandDescriptor set;
 			static CommandDescriptor scope;
 			static CommandDescriptor property;
+			static CommandDescriptor emptyobject;
 			static CommandDescriptor object;
+			static CommandDescriptor prototype;
 
 			/* control flow */
 			static CommandDescriptor command;
