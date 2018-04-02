@@ -124,8 +124,14 @@ When implementing a parser and calling it with a constant string, the while loop
 ## Constant Evaluation
 All operators like `+ - * /` as well as library functions like `substr()` can be constant folded.
 
+## Constant Currifying
+Functions can have any number of parameters. Currifying is the process of splitting a function into a function with only one parameter that returns a function also taking only one parameter returning only one parameter and so on. When choosing the correct order, functions can be currified in a way that parameters containing constants are fed first. This resolves one problem of massive inlining: Code duplication. Currified lightweight functions allow a fast decision whether inlining will improve or worsen the code.
+
+## Removing mutable code nodes
+CodeNodes are immutable with one exception: a `var` node. Usually all parameters of a function are like variables: they can be changed. C-P Compiler can analyze the behaviour of a function and remove those `var` nodes when the value never changes. Also, usually JavaScript closures behave like variables. Instead of supplying them as variables, they can be supplied as constant value instead. This saves memory because the function variable scope does not have to be kept for the livetime of the created closure.
+
 # Current Progress
-C-P compiler is in a concept stage. This is the roadmap:
+C-P compiler is in a prototype stage. This is the roadmap:
 
 Completed:
 * Research results for runtime compiler optimizations
