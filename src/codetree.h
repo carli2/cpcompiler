@@ -124,8 +124,10 @@ namespace cpcompiler {
 
 			/* the heart: Execute */
 			inline CodeNode *exec(CodeNode *context) {
-				/*std::cout << "exec ";	print(std::cout, " ");*/
-				return this->command->executeFunction(context, this);
+				//std::cout << "exec ";	print(std::cout, " ");
+				CodeNode *result = this->command->executeFunction(context, this);
+				//std::cout << "result ";	result->print(std::cout, " ");
+				return result;
 			}
 
 			void print(std::ostream &out, const std::string &prefix) {

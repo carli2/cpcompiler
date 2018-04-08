@@ -7,6 +7,15 @@ namespace cpcompiler {
 			return node;
 		}
 
+		CodeNode *return_(CodeNode *context, CodeNode *node) {
+			CodeNode *result = node->param1.node->exec(context);
+			if (result != node) {
+				node = CodeNode::allocate(&CommandDescriptor::return_);
+				node->param1.node = result;
+			}
+			return node;
+		}
+
 		CodeNode *bind(CodeNode *context, CodeNode *node) {
 			CodeNode *newctx = node->param2.node->exec(context);
 			if (newctx->command == &CommandDescriptor::throw_) return newctx;
@@ -25,9 +34,12 @@ namespace cpcompiler {
 				CodeNode *newctx = func->param2.node;
 				/* extend context object with node->param2.node as argument list */
 				newctx = CodeNode::allocate(&CommandDescriptor::prototype,
-					{ .node = CodeNode::allocate(&CommandDescriptor::property, { .node = CodeNode::string(9, "arguments")}, { .node = args })},
-					{ .node = newctx });
-				return func->param1.node->exec(newctx);
+					{ .node = newctx },
+					{ .node = CodeNode::allocate(&CommandDescriptor::property, { .node = CodeNode::string(9, "arguments")}, { .node = args })});
+				CodeNode *result = func->param1.node->exec(newctx);
+				if (result->command == &CommandDescriptor::throw_) return result;
+				if (result->command == &CommandDescriptor::return_) return result->param1.node;
+				return &CodeNode::undefined;
 			}
 			if (func->command == &CommandDescriptor::native) {
 				/* call native function */
@@ -43,7 +55,7 @@ namespace cpcompiler {
 	CommandDescriptor CommandDescriptor::native("native", &call::reflect, -1);
 	CommandDescriptor CommandDescriptor::func("func", &call::reflect, 2); // func is a data structure (cold)
 	CommandDescriptor CommandDescriptor::bind("bind", &call::bind, 2); // bind is a piece of code (hot, cools down to func)
-	CommandDescriptor CommandDescriptor::return_("return", &call::reflect, 1);
+	CommandDescriptor CommandDescriptor::return_("return", &call::return_, 1);
 
 	CommandDescriptor CommandDescriptor::try_("try", &call::reflect, 2);
 	CommandDescriptor CommandDescriptor::throw_("throw", &call::reflect, 1);
