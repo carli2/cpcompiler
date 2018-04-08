@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <map>
 #include <ostream>
+#include <iostream>
 #include <string>
 
 namespace cpcompiler {
@@ -123,6 +124,7 @@ namespace cpcompiler {
 
 			/* the heart: Execute */
 			inline CodeNode *exec(CodeNode *context) {
+				/*std::cout << "exec ";	print(std::cout, " ");*/
 				return this->command->executeFunction(context, this);
 			}
 

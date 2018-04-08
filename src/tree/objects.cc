@@ -25,12 +25,20 @@ namespace cpcompiler {
 		}
 
 		CodeNode *get(CodeNode *context, CodeNode *node) {
-			// TODO: read property from object
+			// read property from object
+			CodeNode *obj = node->param1.node->exec(context);
+			CodeNode *attr = node->param2.node->exec(context);
+			std::cout<<"get "; attr->print(std::cout, "");
+			std::cout<<"from "; obj->print(std::cout, "");
 			return &CodeNode::undefined;
 		}
 
 		CodeNode *set(CodeNode *context, CodeNode *node) {
-			// TODO: write property to object
+			// write property to object
+			CodeNode *obj = node->param1.node->exec(context);
+			CodeNode *val = node->param2.node->exec(context);
+			std::cout<<"set "; obj->print(std::cout, "");
+			std::cout<<"to "; val->print(std::cout, "");
 			return &CodeNode::undefined;
 		}
 	}
