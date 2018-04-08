@@ -17,17 +17,22 @@ namespace cpcompiler {
 			/* function, parameters */
 			CodeNode *func = node->param1.node->exec(context);
 			if (func->command == &CommandDescriptor::throw_) return func;
+			CodeNode *args = node->param2.node->exec(context);
+			if (args->command == &CommandDescriptor::throw_) return func;
 
 			if (func->command == &CommandDescriptor::func) {
 				/* function call */
 				CodeNode *newctx = func->param2.node;
-				/* TODO: extend context object with node->param2.node as argument list */
+				/* extend context object with node->param2.node as argument list */
+				newctx = CodeNode::allocate(&CommandDescriptor::prototype,
+					{ .node = CodeNode::allocate(&CommandDescriptor::property, { .node = CodeNode::string(9, "arguments")}, { .node = args })},
+					{ .node = newctx });
 				return func->param1.node->exec(newctx);
 			}
 			if (func->command == &CommandDescriptor::native) {
 				/* call native function */
 				NativeFunction fn = func->param1.function;
-				return fn(context, node->param2.node, func->param2.userdata);
+				return fn(context, args, func->param2.userdata);
 			}
 			return node;
 		}

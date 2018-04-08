@@ -99,8 +99,6 @@ namespace cpcompiler {
 		int argNr = 0;
 		while (argNr < 20 && args->command == &CommandDescriptor::list) {
 			CodeNode *node = args->param1.node; // fetch argument
-			// evaluate argument
-			node = node->command->executeFunction(&CodeNode::null, node); // TODO: retrieve context
 			// put into v8 array
 			callargs[argNr++] = nodeToV8(isolate, node);
 			args = args->param2.node;
