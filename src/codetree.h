@@ -151,6 +151,17 @@ namespace cpcompiler {
 				}
 			}
 
+			bool isFalse() {
+				return this->command == &CommandDescriptor::false_
+				|| this->command == &CommandDescriptor::undefined
+				|| this->command == &CommandDescriptor::null
+				|| (this->command == &CommandDescriptor::number && this->param1.number == 0)
+				|| (this->command == &CommandDescriptor::integer && this->param1.integer == 0)
+				|| (this->command == &CommandDescriptor::string && this->param1.integer == 0);
+			}
+
+			bool equals(CodeNode *other);
+
 			/* some default constructors */
 			static CodeNode *number(double number);
 			static CodeNode *integer(std::size_t integer);
@@ -159,6 +170,8 @@ namespace cpcompiler {
 
 			/* some constants to save allocations */
 			static CodeNode undefined;
+			static CodeNode true_;
+			static CodeNode false_;
 			static CodeNode null;
 
 		private:

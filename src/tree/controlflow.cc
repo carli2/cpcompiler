@@ -25,12 +25,7 @@ namespace cpcompiler {
 			if (condition->command == &CommandDescriptor::throw_) {
 				return condition;
 			}
-			if (condition->command == &CommandDescriptor::false_
-				|| condition->command == &CommandDescriptor::undefined
-				|| condition->command == &CommandDescriptor::null
-				|| (condition->command == &CommandDescriptor::number && condition->param1.number == 0)
-				|| (condition->command == &CommandDescriptor::integer && condition->param1.integer == 0)
-				|| (condition->command == &CommandDescriptor::string && condition->param1.integer == 0)) {
+			if (condition->isFalse()) {
 				// false branch
 				if (node->param2.node->command == &CommandDescriptor::else_) {
 					// else: false branch
@@ -48,12 +43,7 @@ namespace cpcompiler {
 				if (condition->command == &CommandDescriptor::throw_) {
 					return condition;
 				}
-				if (condition->command == &CommandDescriptor::false_
-					|| condition->command == &CommandDescriptor::undefined
-					|| condition->command == &CommandDescriptor::null
-					|| (condition->command == &CommandDescriptor::number && condition->param1.number == 0)
-					|| (condition->command == &CommandDescriptor::integer && condition->param1.integer == 0)
-					|| (condition->command == &CommandDescriptor::string && condition->param1.integer == 0)) {
+				if (condition->isFalse()) {
 					// false branch
 					return &CodeNode::undefined;
 				}
