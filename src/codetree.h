@@ -62,8 +62,8 @@ namespace cpcompiler {
 			/* call */
 			static CommandDescriptor call;
 			static CommandDescriptor native;
-			static CommandDescriptor lambda;
-			static CommandDescriptor argument;
+			static CommandDescriptor func;
+			static CommandDescriptor bind;
 			static CommandDescriptor return_;
 
 			/* mutable */
@@ -133,7 +133,7 @@ namespace cpcompiler {
 					if (this->command == &CommandDescriptor::number) {
 						out << ": " << this->param1.number;
 					}
-					else if (this->command == &CommandDescriptor::integer || this->command == &CommandDescriptor::argument) {
+					else if (this->command == &CommandDescriptor::integer) {
 						out << ": " << this->param1.integer;
 					}
 					else if (this->command == &CommandDescriptor::string) {

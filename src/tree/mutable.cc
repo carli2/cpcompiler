@@ -20,7 +20,7 @@ namespace cpcompiler {
 
 		CodeNode *newvar(CodeNode *context, CodeNode *node) {
 			// evaluate new value
-			CodeNode *val = node->param2.node->exec(context);
+			CodeNode *val = node->param1.node->exec(context);
 			if (val->command == &CommandDescriptor::throw_) {
 				return val;
 			}

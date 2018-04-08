@@ -54,11 +54,12 @@ var grammar = {
 
 			["e + e", "$$ = ['operator_add', $1, $3];"],
 
+			["( e )", "$$ = $2;"],
 			["IDENTIFIER", "$$ = ['get', ['scope'], ['string', $1]];"],
 			["e . IDENTIFIER", "$$ = ['get', $1, ['string', $3]];"],
 			["e list", "$$ = ['call', $1, $2];", {"prec": "CALL"}],
-			["FUNCTION ( decllist ) { cmd }", "$$ = ['lambda', ['command', $3.map(function (x, i) { return ['set', ['scope'], ['property', ['string', x], ['newvar', ['argument', i]]]]; }).reduce(function (a, x) { return ['command', a, x]; }), $6], ['newvar', ['prototype', ['emptyobject'], ['scope']]]];", {"prec": "CALL"}],
-			["FUNCTION IDENTIFIER ( decllist ) { cmd }", "$$ = ['set', ['scope'], ['property', ['string', $2], ['lambda', ['command', $4.map(function (x, i) { return ['set', ['scope'], ['property', ['string', x], ['newvar', ['argument', i]]]]; }).reduce(function (a, x) { return ['command', a, x]; }), $7], ['newvar', ['prototype', ['emptyobject'], ['scope']]]]]];", {"prec": "CALL"}],
+			["FUNCTION ( decllist ) { cmd }", "$$ = ['bind', ['command', $3.map(function (x, i) { return ['set', ['scope'], ['property', ['string', x], ['newvar', ['get', ['get', ['scope'], ['string', 'arguments']], [i]]]]]; }).reduce(function (a, x) { return ['command', a, x]; }), $6], ['newvar', ['prototype', ['emptyobject'], ['scope']]]];", {"prec": "CALL"}],
+			["FUNCTION IDENTIFIER ( decllist ) { cmd }", "$$ = ['set', ['scope'], ['property', ['string', $2], ['bind', ['command', $3.map(function (x, i) { return ['set', ['scope'], ['property', ['string', x], ['newvar', ['get', ['get', ['scope'], ['string', 'arguments']], [i]]]]]; }).reduce(function (a, x) { return ['command', a, x]; }), $6], ['newvar', ['prototype', ['emptyobject'], ['scope']]]]]];", {"prec": "CALL"}],
 
 			["NUMBER", "$$ = [Number(yytext)];"],
 			["STRING", "$$ = ['string', yytext];"]

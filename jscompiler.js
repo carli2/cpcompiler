@@ -1,5 +1,17 @@
 const syntax = require('./jssyntax.js');
-const cpcompiler = require('./build/Release/cpcompiler');
+const fs = require('fs');
+function getLatestFile(...files) {
+	var best = null, bestTime = 0;
+	for (var i = 0; i < files.length; i++) {
+		var ctime = fs.statSync(files[i]).ctime.getTime();
+		if (ctime > bestTime) {
+			bestTime = ctime;
+			best = files[i];
+		}
+	}
+	return best;
+}
+const cpcompiler = require(getLatestFile('./build/Release/cpcompiler.node', './build/Debug/cpcompiler.node'));
 
 function compile(expr) {
 	var ast = syntax.parse(expr);
@@ -22,11 +34,12 @@ function compileAndExecute(expr, ...args) {
 }
 
 console.log('1 + 2 =', compileAndExecute('1 + 2'));
-var fn = compile('function (x) { return x + 1; }');
+var fn = compile('(function (x) { return x + 1; })(5)');
 console.log(fn.print());
 console.log('(function (x) { return x + 1; })(5) =', fn.exec(5));
 
 var codeTree = compile('console.log("Hello World")');
 console.log(codeTree.print());
+codeTree.exec();
 
 console.log(compile('while (a) { print("Hello World"); break; }').print());

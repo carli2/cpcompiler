@@ -144,10 +144,6 @@ namespace cpcompiler {
 				} else if (iter->second == &CommandDescriptor::integer) {
 					// integer literal
 					n = CodeNode::integer(args[1]->ToInteger()->Value());
-				} else if (iter->second == &CommandDescriptor::argument) {
-					// argument literal
-					n = CodeNode::integer(args[1]->ToInteger()->Value());
-					n->command = &CommandDescriptor::argument;
 				}
 			} else {
 				// not found
