@@ -50,7 +50,7 @@ Every node in the code tree collects profiling information that is used to optim
 
 The second stage is optimized code tree. Whenever a value is used very often, an alternative code tree is built that pulls some values out of loops, unrolls constant data structures or pre-parses constant strings.
 
-The third stage is the fast-JITed code tree. This stage is still fast to build because the JIT compiler is very dump. It just pastes a predefined snippet of code for every node in the code tree.
+The third stage is the fast-JITed code tree. This stage is still fast to build because the JIT compiler is very dumb. It just pastes a predefined snippet of code for every node in the code tree.
 
 The fourth stage will utilize the LLVM compiler in order to create highly optimized code. LLVM is capable of using SSE instructions, partially unrolling loops and much more. This is the most expensive optimization and will only be used if the unoptimized code will run longer than 100ms.
 
@@ -162,9 +162,9 @@ $ node jscompiler.js # testing full JavaScript parser&compiler
 # Testing and TODO
 To test your own first experiments, take a look at `runtests.js`:
 ```
-var numbera = cpcompiler.node(12)
-var numberb = cpcompiler.node(1)
-var numberc = cpcompiler.node('operator_add', numbera, numberb);
+var numbera = cpc.node(12)
+var numberb = cpc.node(1)
+var numberc = cpc.node('operator_add', numbera, numberb);
 console.log(numberc.exec());
 ```
 the result:

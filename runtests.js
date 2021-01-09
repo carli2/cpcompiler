@@ -1,32 +1,32 @@
 console.log('run this after node-gyp configure && node-gyp build');
 
-const cpcompiler = require('./build/Release/cpcompiler');
+const cpc = require('./build/Release/cpcompiler');
 
-console.log('using cpcompiler version ' + cpcompiler.getVersion());
+console.log('using cpcompiler version ' + cpc.getVersion());
 
-var numbera = cpcompiler.node(12)
-var numberb = cpcompiler.node(1)
-var numberc = cpcompiler.node('operator_add', numbera, numberb);
+var numbera = cpc.node(12)
+var numberb = cpc.node(1)
+var numberc = cpc.node('operator_add', numbera, numberb);
 console.log(numbera.exec() + '+' + numberb.exec() + '=' + numberc.exec());
 
 // call a print function
-var print = cpcompiler.node(function foo(value) {
+var print = cpc.node(function foo(value) {
 	console.log('result is ' + value);
 });
-var code = cpcompiler.node('call', print,
-	cpcompiler.node('list',
+var code = cpc.node('call', print,
+	cpc.node('list',
 		numberc,
-		cpcompiler.node('emptylist')
+		cpc.node('emptylist')
 	)
 );
 code.exec();
 
-var returnNumber = cpcompiler.node(function () {
+var returnNumber = cpc.node(function () {
 	return 123;
 });
-var addSomething = cpcompiler.node('operator_add',
-	x=cpcompiler.node('call', returnNumber, cpcompiler.node('emptylist')),
-	cpcompiler.node(1)
+var addSomething = cpc.node('operator_add',
+	x=cpc.node('call', returnNumber, cpc.node('emptylist')),
+	cpc.node(1)
 );
 console.log('returnNumber() = ' + x.exec());
 console.log('returnNumber() + 1 = ' + addSomething.exec());
