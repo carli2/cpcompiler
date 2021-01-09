@@ -31,3 +31,8 @@ var addSomething = cpc.node('operator_add',
 console.log('returnNumber() = ' + x.exec());
 console.log('returnNumber() + 1 = ' + addSomething.exec());
 
+
+// context test
+var getter = cpc.node('get', cpc.node('scope'), cpc.node('string', 'foo'));
+var context = cpc.node('property', cpc.node('string', 'foo'), cpc.node(25));
+console.log('foo = ', getter.exec(context));

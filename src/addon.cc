@@ -24,11 +24,16 @@ namespace cpcompiler {
 		if (node && node->command == &CommandDescriptor::number) {
 			return v8::Number::New(isolate, node->param1.number);
 		}
+		if (node && node->command == &CommandDescriptor::string) {
+			return v8::String::NewFromUtf8(isolate, node->param2.string, v8::NewStringType::kNormal, node->param1.integer).ToLocalChecked();
+		}
 		return v8::Undefined(isolate);
 	}
 
 	CodeNode *v8ToCodeNode(Isolate *isolate, Local<Value> val) {
 		CodeNode *n = &CodeNode::undefined;
+
+		/* Strings aren't handled here, rather call node('string', literal) */
 
 		/* Number literal */
 		if (val->IsNumber()) {
@@ -41,6 +46,8 @@ namespace cpcompiler {
 			auto p = new v8::NonCopyablePersistentTraits<Function>::NonCopyablePersistent(isolate, Handle<Function>::Cast(val));
 			n = CodeNode::native(&nativeExecute, p);
 		}
+
+		/* TODO: Wrap JS-Object */
 
 		return n;
 	}
@@ -65,8 +72,13 @@ namespace cpcompiler {
 			// fetch CodeNode object
 			CodeNode *node = (CodeNode *) External::Cast(*args.This()->GetInternalField(0))->Value();
 
+			CodeNode *context = &CodeNode::null;
+			if (args.Length() >= 1 && args[0]->IsObject() && Object::Cast(*args[0])->InternalFieldCount() == 1) { // context -> 1st parameter
+				context = (CodeNode *) External::Cast(*Object::Cast(*args[0])->GetInternalField(0))->Value();
+			}
+
 			// execute
-			node = node->exec(&CodeNode::null);
+			node = node->exec(context);
 
 			// output result
 			args.GetReturnValue().Set(nodeToV8(args.GetIsolate(), node));
@@ -113,9 +125,10 @@ namespace cpcompiler {
 		/* node-based constructor */
 		if (args[0]->IsString()) {
 			String::Utf8Value str(args[0]->ToString());
-			auto iter = CommandDescriptor::commands.find(*str);
+			auto iter = CommandDescriptor::commands.find(*str); // find associated command
 			if (iter != CommandDescriptor::commands.end()) {
 				if (iter->second->nodeArguments != -1) {
+					// build up node
 					n = CodeNode::allocate();
 					n->command = iter->second;
 					if (iter->second->nodeArguments >= 1) {
@@ -149,6 +162,7 @@ namespace cpcompiler {
 				n = &CodeNode::undefined;
 			}
 		} else {
+			// first argument is not a string? wrap objects, number and functions
 			n = v8ToCodeNode(args.GetIsolate(), args[0]);
 		}
 
